@@ -1,5 +1,6 @@
 #Specifies the working directory
 setwd("~/Projects/TouchExp/MainStudy/Rscript/TouchExp")
+t <- ("BoisBeBois")
 
 #Import A-condition file
 my_data <- read.delim("TouchAComplete.txt")
