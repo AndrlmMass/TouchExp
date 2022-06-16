@@ -28,3 +28,5 @@ colnames(my_data)[1:48] <- new.names1
 colnames(my_data)[69:72] <- new.names2
 
 attach(my_data)
+
+print("André bør få betalt for dette")
