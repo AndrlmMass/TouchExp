@@ -192,35 +192,20 @@ for (i in 1:nrow(my_data)){
   my_data[i,86] = Comp
 }
 
-#Use function to combine all qual answers from relevant items into one
-#data frame
-QualAns[,1] <- QualCombiner(3)
-QualAns[,2] <- QualCombiner(5)
-QualAns[,3] <- QualCombiner(7)
-QualAns[,4] <- QualCombiner(8)
-QualAns[,5] <- QualCombiner(21)
+
+#### THE BIG ANALYSES ####
+
+library(ggplot2)
+attach(my_data)
+# First, locate the outliers
 
 ViolinIQR <- function(Item){
   print(ggplot(my_data, aes(x=Condition,y=Item,fill=Condition))+
           geom_violin(trim =FALSE)+
-          stat.summary(fun = "mean", geom = "crossbar", Width = 0.5, colour = "red")+
+          stat_summary(fun = "mean", geom = "crossbar", width = 0.4, colour = "black")+
           geom_point(position = position_jitter(w=0.1, h=0)))
   IQROutliers <- (boxplot.stats(Item)$out)
   return (IQROutliers)
 }
 
-DaGrandConvertar <- function(CharVector,Col){
-  NewVector <- rep(NA,nrow(my_data))
-  l <- 1
-  for (i in 1:nrow(my_data)){
-    if (is.element(my_data[i,Col],CharVector)){
-      NewVector[l] <- which(CharVector == my_data[i,Col])
-      l <- l + 1
-    } else if (is.na(my_data[i,Col])==TRUE){
-      Sz <- length(CharVector)+1
-      NewVector[l] <- Sz
-      l <- l + 1
-    }
-  }
-  return (NewVector)
-}
+ViolinIQR(GrandNeedMean)
