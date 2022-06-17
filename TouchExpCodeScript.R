@@ -1,7 +1,5 @@
 #Specifies the working directory
 setwd("~/Projects/TouchExp/MainStudy/Rscript/TouchExp")
-t <- ("BoisBeBois")
-iq <- "I really hope this pc works again soon..."
 
 #Import A-condition file
 my_data <- read.delim("TouchAComplete.txt")
@@ -19,6 +17,9 @@ my_data <- rbind(my_data,my_data2)
 #Remove irrelevant columns
 my_data <- subset(my_data,select = -c(2:5))
 
+install.packages("tidyverse")
+library(tibble)
+
 #### Converting values and labels ####
 
 # Converting column names
@@ -29,7 +30,154 @@ new.names2 <- c("Age","Gender","GenderType","ElapsedTime")
 colnames(my_data)[1:48] <- new.names1
 colnames(my_data)[69:72] <- new.names2
 
-attach(my_data)
+DaGrandConvertar <- function(CharVector,Col){
+  NewVector <- rep(NA,nrow(my_data))
+  l <- 1
+  for (i in 1:nrow(my_data)){
+    if (is.element(my_data[i,Col],CharVector)){
+      NewVector[l] <- which(CharVector == my_data[i,Col])
+      l <- l + 1
+    } else if (is.na(my_data[i,Col])==TRUE){
+      Sz <- length(CharVector)+1
+      NewVector[l] <- Sz
+      l <- l + 1
+    }
+  }
+  return (NewVector)
+}
 
-print("André bør få betalt for dette")
-print("Begynner å lure på hva som skjer")
+g <- 1 #Counter for position in df "QualAns"
+
+
+#Alter values in Touch Partner column to numeric
+
+for (i in 1:nrow(my_data)) {
+  if (my_data[i, 4] == "Partner" | my_data[i, 4] == "Family member"){
+    my_data[i,4] = 1
+  } else if (my_data[i, 4] == "Friend" | my_data[i, 4] == "Colleague"| my_data[i, 4] == "Acquaintance"){
+    my_data[i,4] = 2
+  } else if (my_data[i,4] == "Stranger"){
+    my_data[i,4] = 3
+  } else if (is.na(my_data[i,5]) == FALSE){
+    my_data[i,2] = 4
+  }
+}
+
+# Converting Humidity values to NA if "not applicable" is true
+for (i in 1:nrow(my_data)){
+  if (is.na(my_data[i,17]) == FALSE){
+    my_data[i,16] = NA
+    my_data[i,17] = 1
+  }
+}
+# Converting Velocity values to NA if "Not applicable" is true
+for (i in 1:nrow(my_data)){
+  if (is.na(my_data[i,19]) == FALSE){
+    my_data[i,18] = NA
+    my_data[i,19] = 1
+  }
+}
+
+##Create function that combines qual answers into new data frame##
+QualAns <- data.frame(matrix(NA,nrow = 300,ncol = 5))
+colnames(QualAns) <- c("AlternTouch","AlternPartnr","Intention","Perception","Location")
+QualCombiner <- function(Col){
+  t <- 1
+  QualVec <- rep(NA,nrow(my_data))
+  for (i in 1:nrow(my_data)){
+    if (is.na(my_data[i,Col])==FALSE){
+      QualVec[t] <- my_data[i,Col]
+      t <- t + 1
+    }
+  }
+  return (QualVec)
+}
+
+# Converting need and affect values
+# String -> integer
+for (i in 22:68){
+  for (u in 1:nrow(my_data)){
+    if (my_data[u,i] == "Not at all"| my_data[u,i] == "Not at all (1)"){
+      my_data[u,i] = 1
+    } else if (my_data[u,i] == "A little" | my_data[u,i] == "A little (2)"){
+      my_data[u,i] = 2
+    } else if (my_data[u,i] == "Moderately" | my_data[u,i] == "Moderately (3)"){
+      my_data[u,i] = 3
+    } else if (my_data[u,i] == "Quite a bit" | my_data[u,i] == "Quite a bit (4)"){
+      my_data[u,i] = 4
+    } else if (my_data[u,i] == "Very much" | my_data[u,i] == "Extremely (5)"){
+      my_data[u,i] = 5
+    } else {
+      sprintf("There is something wrong in the following row: %s", i)
+    }
+  }
+}
+
+# Converting time spent to numerical minutes
+for (i in 1:nrow(my_data)){
+  StringTime <- my_data[i,72];
+  IntTime <- as.numeric(sapply(strsplit(StringTime, " "), "[[", 1))
+  my_data[i,72] = IntTime
+}
+
+# Creating aggregated need values
+# Change character values to numerical to make mean measure possible.
+my_data[,22:69] <- sapply(my_data[,22:69],as.numeric)
+my_data[,72] <- sapply(my_data[,72],as.numeric)
+my_data[,2] <- sapply(my_data[,2],as.numeric)
+my_data[,4] <- sapply(my_data[,4],as.numeric)
+my_data[,9:16] <- sapply(my_data[,9:16],as.numeric)
+my_data[,18] <- sapply(my_data[,18],as.numeric)
+
+# Grand need mean by participant
+my_data$GrandNeedMean <- rowMeans(my_data[,22:48])
+my_data$Autonomy <- rowMeans(my_data[,c("TrueInterest","Freedom", "TrueSelf")])
+my_data$Competence <- rowMeans(my_data[,c("ComplDiffTask", "MasterChal","Capable")])
+my_data$Relatedness <- rowMeans(my_data[,c("SenseOfContact","CloseConnect","StrongIntimacy")])
+my_data$SelfActualization <- rowMeans(my_data[,c("BecomeSelf", "DeepPurpose","Awe")])
+my_data$PhysicalThriving <- rowMeans(my_data[,c("EnoughExercise","BodyNeeded","WellBeing")])
+my_data$PleasureStimulation <- rowMeans(my_data[,c("NewSensation","PhysPleasure","SourceOfStimuli")])
+my_data$Security <- rowMeans(my_data[,c("StructPredict","RoutinesHabits", "Safe")])
+my_data$SelfEsteem <- rowMeans(my_data[,c("PosQualities","SatisfiedSelf","SelfRespect")])
+my_data$Popularity <- rowMeans(my_data[,c("StrongImpact","OtherSeekAdvice","Influence")])
+my_data$PositiveAff <- rowMeans(my_data[,c("Proud","Interested","Excited","Enthusiastic","Inspired","Alert","Determined","Active","Attentive","Strong")])
+my_data$NegativeAff <- rowMeans(my_data[,c("Nervous","Upset","Scared","Jittery","Afraid","Hostile","Irritable","Guilty","Distressed","Ashamed")])
+my_data$CompositeAff <- NA
+
+for (i in 1:nrow(my_data)){
+  Comp <- (my_data[i,84])-(my_data[i,85])
+  my_data[i,86] = Comp
+}
+
+#Use function to combine all qual answers from relevant items into one
+#data frame
+QualAns[,1] <- QualCombiner(3)
+QualAns[,2] <- QualCombiner(5)
+QualAns[,3] <- QualCombiner(7)
+QualAns[,4] <- QualCombiner(8)
+QualAns[,5] <- QualCombiner(21)
+
+ViolinIQR <- function(Item){
+  print(ggplot(my_data, aes(x=Condition,y=Item,fill=Condition))+
+          geom_violin(trim =FALSE)+
+          stat.summary(fun = "mean", geom = "crossbar", Width = 0.5, colour = "red")+
+          geom_point(position = position_jitter(w=0.1, h=0)))
+  IQROutliers <- (boxplot.stats(Item)$out)
+  return (IQROutliers)
+}
+
+DaGrandConvertar <- function(CharVector,Col){
+  NewVector <- rep(NA,nrow(my_data))
+  l <- 1
+  for (i in 1:nrow(my_data)){
+    if (is.element(my_data[i,Col],CharVector)){
+      NewVector[l] <- which(CharVector == my_data[i,Col])
+      l <- l + 1
+    } else if (is.na(my_data[i,Col])==TRUE){
+      Sz <- length(CharVector)+1
+      NewVector[l] <- Sz
+      l <- l + 1
+    }
+  }
+  return (NewVector)
+}
