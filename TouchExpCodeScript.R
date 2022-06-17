@@ -1,6 +1,7 @@
 #Specifies the working directory
 setwd("~/Projects/TouchExp/MainStudy/Rscript/TouchExp")
 t <- ("BoisBeBois")
+iq <- "I really hope this pc works again soon..."
 
 #Import A-condition file
 my_data <- read.delim("TouchAComplete.txt")
@@ -31,3 +32,4 @@ colnames(my_data)[69:72] <- new.names2
 attach(my_data)
 
 print("André bør få betalt for dette")
+print("Begynner å lure på hva som skjer")
