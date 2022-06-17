@@ -1,5 +1,5 @@
 #Specifies the working directory
-setwd("~/Projects/TouchExp/MainStudy/Rscript/TouchExp")
+setwd("~/Projects/TouchExp/MainStudy/Rscript2/TouchExp")
 
 #Import A-condition file
 my_data <- read.delim("TouchAComplete.txt")
@@ -17,7 +17,7 @@ my_data <- rbind(my_data,my_data2)
 #Remove irrelevant columns
 my_data <- subset(my_data,select = -c(2:5))
 
-install.packages("tidyverse")
+#install.packages("tidyverse")
 library(tibble)
 
 #### Converting values and labels ####
@@ -29,6 +29,10 @@ new.names2 <- c("Age","Gender","GenderType","ElapsedTime")
 
 colnames(my_data)[1:48] <- new.names1
 colnames(my_data)[69:72] <- new.names2
+
+my_data[my_data == ""] <- NA
+
+##Create function for conversion of qualitative data to numeric
 
 DaGrandConvertar <- function(CharVector,Col){
   NewVector <- rep(NA,nrow(my_data))
@@ -46,7 +50,35 @@ DaGrandConvertar <- function(CharVector,Col){
   return (NewVector)
 }
 
-g <- 1 #Counter for position in df "QualAns"
+##Convert type of touch##
+# Hug = 1
+# Hand on the shoulder = 2
+# Kiss = 3
+# Caress = 4
+# Handshake = 5
+# Other = 6
+
+TypeVector <- c("Hug","Hand on the shoulder","Kiss","Caress","Handshake")
+my_data[,2] <- DaGrandConvertar(TypeVector,2)
+
+##Convert RelationToPartner dots to numerics##
+# Number of dots converted to numeric. E.g., "." = 1, ".." = 2. 
+
+Rel2Partnr <- c(".","..","...","....",".....","......",".......")
+my_data[,9] <- DaGrandConvertar(Rel2Partnr,9)
+
+##Convert Initiative##
+# Me = 1, Both = 2, Other = 3
+
+Init2Touch <- c("I mainly took the initiative","We both took the initiative","The interaction partner mainly took the initiative
+")
+my_data[,6] <- DaGrandConvertar(Init2Touch,6)
+
+##Convert gender to numerics##
+# Male = 1, Female = 2, Non-binary = 3
+
+GendItems <- c("Male","Female","Non-binary")
+my_data[,70] <- DaGrandConvertar(GendItems,70)
 
 
 #Alter values in Touch Partner column to numeric
@@ -79,8 +111,10 @@ for (i in 1:nrow(my_data)){
 }
 
 ##Create function that combines qual answers into new data frame##
+
 QualAns <- data.frame(matrix(NA,nrow = 300,ncol = 5))
 colnames(QualAns) <- c("AlternTouch","AlternPartnr","Intention","Perception","Location")
+
 QualCombiner <- function(Col){
   t <- 1
   QualVec <- rep(NA,nrow(my_data))
@@ -92,6 +126,14 @@ QualCombiner <- function(Col){
   }
   return (QualVec)
 }
+
+#Use function to combine all qual answers from relevant items into one
+#data frame
+QualAns[,1] <- QualCombiner(3)
+QualAns[,2] <- QualCombiner(5)
+QualAns[,3] <- QualCombiner(7)
+QualAns[,4] <- QualCombiner(8)
+QualAns[,5] <- QualCombiner(21)
 
 # Converting need and affect values
 # String -> integer
@@ -128,6 +170,7 @@ my_data[,2] <- sapply(my_data[,2],as.numeric)
 my_data[,4] <- sapply(my_data[,4],as.numeric)
 my_data[,9:16] <- sapply(my_data[,9:16],as.numeric)
 my_data[,18] <- sapply(my_data[,18],as.numeric)
+my_data[,70] <- sapply(my_data[,70],as.character)
 
 # Grand need mean by participant
 my_data$GrandNeedMean <- rowMeans(my_data[,22:48])
