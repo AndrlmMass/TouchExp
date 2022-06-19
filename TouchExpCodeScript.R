@@ -70,8 +70,7 @@ my_data[,9] <- DaGrandConvertar(Rel2Partnr,9)
 ##Convert Initiative##
 # Me = 1, Both = 2, Other = 3
 
-Init2Touch <- c("I mainly took the initiative","We both took the initiative","The interaction partner mainly took the initiative
-")
+Init2Touch <- c("I mainly took the initiative","We both took the initiative","The interaction partner mainly took the initiative")
 my_data[,6] <- DaGrandConvertar(Init2Touch,6)
 
 ##Convert gender to numerics##
@@ -166,10 +165,9 @@ for (i in 1:nrow(my_data)){
 # Change character values to numerical to make mean measure possible.
 my_data[,22:69] <- sapply(my_data[,22:69],as.numeric)
 my_data[,72] <- sapply(my_data[,72],as.numeric)
-my_data[,2] <- sapply(my_data[,2],as.numeric)
+my_data[,17] <- sapply(my_data[,17],as.numeric)
+my_data[,19] <- sapply(my_data[,19],as.numeric)
 my_data[,4] <- sapply(my_data[,4],as.numeric)
-my_data[,9:16] <- sapply(my_data[,9:16],as.numeric)
-my_data[,18] <- sapply(my_data[,18],as.numeric)
 my_data[,70] <- sapply(my_data[,70],as.character)
 
 # Grand need mean by participant
@@ -192,6 +190,9 @@ for (i in 1:nrow(my_data)){
   my_data[i,86] = Comp
 }
 
+
+write.csv(my_data,"C:\\Users\\andre\\OneDrive\\Documents\\TouchExp\\ConvertedTouchScores.csv", row.names = FALSE)
+write.csv(QualAns,"C:\\Users\\andre\\OneDrive\\Documents\\TouchExp\\QualitativeAnswersPool.csv", row.names = FALSE)
 
 #### THE BIG ANALYSES ####
 
