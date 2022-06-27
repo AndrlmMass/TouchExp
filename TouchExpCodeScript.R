@@ -81,21 +81,10 @@ my_data[,70] <- DaGrandConvertar(GendItems,70)
 
 
 #Alter values in Touch Partner column to numeric
-# Partner or Family member = 1
-# Friend or Colleague or Acquaintance = 2
-# Stranger = 3
+# Partner = 1, Family member = 2, Friend = 3, Colleague = 4, Acquaintance = 5, Stranger = 6, Other = 7
 
-for (i in 1:nrow(my_data)) {
-  if (my_data[i, 4] == "Partner" | my_data[i, 4] == "Family member"){
-    my_data[i,4] = 1
-  } else if (my_data[i, 4] == "Friend" | my_data[i, 4] == "Colleague"| my_data[i, 4] == "Acquaintance"){
-    my_data[i,4] = 2
-  } else if (my_data[i,4] == "Stranger"){
-    my_data[i,4] = 3
-  } else if (is.na(my_data[i,5]) == FALSE){
-    my_data[i,2] = 4
-  }
-}
+TouchPart <- c("Partner","Family member","Friend","Colleague","Acquaintance","Stranger")
+my_data[,4] <- DaGrandConvertar(TouchPart,4)
 
 # Converting Humidity values to NA if "not applicable" is true
 for (i in 1:nrow(my_data)){
