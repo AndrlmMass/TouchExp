@@ -81,6 +81,9 @@ my_data[,70] <- DaGrandConvertar(GendItems,70)
 
 
 #Alter values in Touch Partner column to numeric
+# Partner or Family member = 1
+# Friend or Colleague or Acquaintance = 2
+# Stranger = 3
 
 for (i in 1:nrow(my_data)) {
   if (my_data[i, 4] == "Partner" | my_data[i, 4] == "Family member"){

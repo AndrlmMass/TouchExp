@@ -1,6 +1,8 @@
 df <- read.csv("ConvertedTouchScores.csv")
 
 library(ggplot2)
+library(lsr)
+library(effsize)
 attach(df)
 
 
@@ -48,10 +50,40 @@ lm1 <- lm(NegativeAff ~ GrandNeedMean)
 
 summary(lm1)
 
-par(mfrow=c(2,2))
+par(mfrow=c(1,1))
 plot(lm1)
 
+## t-tests
+DatTestBeast <- function(Var){
+  boxplot(Var~Condition)
+  return (t.test(Var~Condition))
+}
 
+Effin <- 
 
-  
+# Appropriate
+t.test(Appropriate~Condition)
+boxplot(Appropriate~Condition)  
+
+cohen.d(Appropriate~Condition, data = df)
+
+# Expectation
+t.test(Expectation~Condition)
+boxplot(Expectation ~ Condition)
+
+cohen.d(Expectation~Condition, data = df)
+
+# Relation2Partner
+
+t.test(Relation2Partner~Condition)
+boxplot(Relation2Partner~Condition)
+
+cohen.d(Relation2Partner~Condition, data = df)
+
+# Roughness
+
+t.test(Roughness~Condition)
+boxplot(Roughness~Condition)
+
+cohen.d(Roughness~Condition, data = df)
 
