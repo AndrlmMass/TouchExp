@@ -42,48 +42,49 @@ for (i in 1:length(ColList)){
   } 
 }
 
+## t-tests
+#Function that runs t-test, shows boxplot and prints effect size for all variables 
+#grouped by condition
+ColList2 <- c(4,9:16,18,20,74:86) #Relevant columns
+colnamnam2 <- c() # Empty vector to be filled with column names
+
+for (i in 1:length(ColList2)){
+  t <- names(df[ColList2[i]])
+  colnamnam2 <- append(colnamnam2,t)
+}
+
+DatTestBeast <- function(Var, nam){
+  print(ggplot(df, aes(x=Condition,y=Var,fill=Condition))+
+    geom_violin(trim =FALSE)+
+    stat_summary(fun = "mean", geom = "crossbar", width = 0.4, colour = "black")+
+    geom_point(position = position_jitter(width = .07, height = .5))+
+    ggtitle(nam))
+  print(t.test(Var~Condition))
+  print(cohen.d(Var~Condition, data = df))
+}
+
+Approv2 <- 1
+for (i in 1:length(ColList2)){
+  ColumnVec2 <- df[,ColList2[i]]
+  ColumnName2 <- colnamnam2[i]
+  DatTestBeast(ColumnVec2,ColumnName2)
+  Approv2 <- readline(prompt = "Press enter to see the next plot.")
+  if (Approv2 != ""){
+    break
+  } 
+}
+
 ## Does Needs predict affect?
 
 plot(NegativeAff, GrandNeedMean)
 
-lm1 <- lm(NegativeAff ~ GrandNeedMean)
+lm1 <- lm(CompositeAff ~ Relatedness + GrandNeedMean)
 
 summary(lm1)
+
 
 par(mfrow=c(1,1))
 plot(lm1)
 
-## t-tests
-DatTestBeast <- function(Var){
-  boxplot(Var~Condition)
-  return (t.test(Var~Condition))
-}
 
-Effin <- 
-
-# Appropriate
-t.test(Appropriate~Condition)
-boxplot(Appropriate~Condition)  
-
-cohen.d(Appropriate~Condition, data = df)
-
-# Expectation
-t.test(Expectation~Condition)
-boxplot(Expectation ~ Condition)
-
-cohen.d(Expectation~Condition, data = df)
-
-# Relation2Partner
-
-t.test(Relation2Partner~Condition)
-boxplot(Relation2Partner~Condition)
-
-cohen.d(Relation2Partner~Condition, data = df)
-
-# Roughness
-
-t.test(Roughness~Condition)
-boxplot(Roughness~Condition)
-
-cohen.d(Roughness~Condition, data = df)
 
