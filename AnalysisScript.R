@@ -68,23 +68,71 @@ for (i in 1:length(ColList2)){
   ColumnVec2 <- df[,ColList2[i]]
   ColumnName2 <- colnamnam2[i]
   DatTestBeast(ColumnVec2,ColumnName2)
-  Approv2 <- readline(prompt = "Press enter to see the next plot.")
+  Approv2 <- readline(prompt = "Press <enter> to see the next plot.")
   if (Approv2 != ""){
     break
   } 
 }
 
-## Does Needs predict affect?
+## Does Needs predict affect better than Touch?
+# SHOULD CONSIDER VIF - NOT SURE WHY YET
 
-plot(NegativeAff, GrandNeedMean)
+#Test multicollinearity between predictors
 
-lm1 <- lm(CompositeAff ~ Relatedness + GrandNeedMean)
+library(car)
+library(quantmod)
+library(MASS)
+library(corrplot)
+
+RelCol <- df[,75:83]
+
+varvar <- cor(RelCol, method = "pearson")
+
+for (i in 1:ncol(varvar)){
+  print(mean(varvar[,i]))
+}
+
+## Linear model predicting positive affect with needs and touch grouped into two different models ##
+
+#Region
+# POSITIVE AFFECT - ADD THE "FULL MODEL" VERSION TOO
+
+# Needs predicting positive affect
+lm1 <- lm(PositiveAff ~ Relatedness + Competence)
 
 summary(lm1)
 
+# Physical touch as  predictor 
+lm2 <- lm(PositiveAff ~ Roughness + Intensity)
 
-par(mfrow=c(1,1))
-plot(lm1)
+summary(lm2)
+
+# NEGATIVE AFFECT
+
+# Need as predictor
+lm3 <- lm(NegativeAff ~ Relatedness + Competence)
+
+summary(lm3)
+
+lm4 <- lm(NegativeAff ~ Relatedness + Competence + SelfActualization + 
+            Security + SelfEsteem + PleasureStimulation + PhysicalThriving + 
+            Autonomy + Popularity)
+
+summary(lm4)
+
+# Physical touch  as predictor
+lm5 <- lm(NegativeAff ~ Roughness + Intensity)
+
+summary(lm5)
+
+lm6 <- lm(NegativeAff ~ Roughness + Intensity + Humidity + Velocity)
+
+summary(lm6)
 
 
+# Touch context regression analyses ---------------------------------------
+
+lm7 <- lm(PositiveAff ~ Pleasantness + Comfortable)
+
+summary(lm7)
 

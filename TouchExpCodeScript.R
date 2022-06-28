@@ -24,7 +24,7 @@ library(tibble)
 
 # Converting column names
 
-new.names1 <- c("ID","TypeOfTouch","OthTouchType","InterPartner","OtherIntPartner","Initiative", "Intention","Perception","Relation2Partner","Roughness","Pleasantness","Power","Comfortable","Duration","Appropriate","Humidity","HumApplic","Velocity","VeloApplic","Expectation","Location","ComplDiffTask","NewSensation","SenseOfContact","BecomeSelf","StructPredict","OtherSeekAdvice","TrueInterest","PosQualities","CloseConnect","PhysPleasure","EnoughExercise","MasterChal","DeepPurpose","RoutinesHabits","SelfRespect","Influence","BodyNeeded","Freedom","SatisfiedSelf","SourceOfStimuli","Safe","WellBeing","Capable","TrueSelf","Awe","StrongImpact","StrongIntimacy")
+new.names1 <- c("ID","TypeOfTouch","OthTouchType","InterPartner","OtherIntPartner","Initiative", "Intention","Perception","Relation2Partner","Roughness","Pleasantness","Intensity","Comfortable","Duration","Appropriate","Humidity","HumApplic","Velocity","VeloApplic","Expectation","Location","ComplDiffTask","NewSensation","SenseOfContact","BecomeSelf","StructPredict","OtherSeekAdvice","TrueInterest","PosQualities","CloseConnect","PhysPleasure","EnoughExercise","MasterChal","DeepPurpose","RoutinesHabits","SelfRespect","Influence","BodyNeeded","Freedom","SatisfiedSelf","SourceOfStimuli","Safe","WellBeing","Capable","TrueSelf","Awe","StrongImpact","StrongIntimacy")
 new.names2 <- c("Age","Gender","GenderType","ElapsedTime")
 
 colnames(my_data)[1:48] <- new.names1
