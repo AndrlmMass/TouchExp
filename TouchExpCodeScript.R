@@ -24,7 +24,7 @@ library(tibble)
 
 # Converting column names
 
-new.names1 <- c("ID","TypeOfTouch","OthTouchType","InterPartner","OtherIntPartner","Initiative", "Intention","Perception","Relation2Partner","Roughness","Pleasantness","Intensity","Comfortable","Duration","Appropriate","Humidity","HumApplic","Velocity","VeloApplic","Expectation","Location","ComplDiffTask","NewSensation","SenseOfContact","BecomeSelf","StructPredict","OtherSeekAdvice","TrueInterest","PosQualities","CloseConnect","PhysPleasure","EnoughExercise","MasterChal","DeepPurpose","RoutinesHabits","SelfRespect","Influence","BodyNeeded","Freedom","SatisfiedSelf","SourceOfStimuli","Safe","WellBeing","Capable","TrueSelf","Awe","StrongImpact","StrongIntimacy")
+new.names1 <- c("ID","TypeOfTouch","OthTouchType","InterPartner","OtherIntPartner","Initiative", "Intention","Perception","Relation2Partner","Roughness","Pleasantness","Power","Comfortable","Duration","Appropriate","Humidity","HumApplic","Velocity","VeloApplic","Expectation","Location","ComplDiffTask","NewSensation","SenseOfContact","BecomeSelf","StructPredict","OtherSeekAdvice","TrueInterest","PosQualities","CloseConnect","PhysPleasure","EnoughExercise","MasterChal","DeepPurpose","RoutinesHabits","SelfRespect","Influence","BodyNeeded","Freedom","SatisfiedSelf","SourceOfStimuli","Safe","WellBeing","Capable","TrueSelf","Awe","StrongImpact","StrongIntimacy")
 new.names2 <- c("Age","Gender","GenderType","ElapsedTime")
 
 colnames(my_data)[1:48] <- new.names1
@@ -193,4 +193,4 @@ for (i in 1:nrow(my_data)){
 #Write to csv file for analyses in new script. 
 
 write.csv(my_data,"C:\\Users\\andre\\OneDrive\\Documents\\TouchExp\\ConvertedTouchScores.csv", row.names = FALSE)
-write.csv(QualAns,"C:\\Users\\andre\\OneDrive\\Documents\\TouchExp\\QualitativeAnswersPool.csv", row.names = FALSE)
+write.csv(QualAns,"C:\\Users\\andrlm\\OneDrive\\Documents\\TouchExp\\QualitativeAnswersPool3.csv")
