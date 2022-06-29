@@ -3,14 +3,11 @@ df <- read.csv("ConvertedTouchScores.csv")
 library(lme4)
 library(nlme)
 library(ggplot2)
-<<<<<<< HEAD
 library(dplyr)
 library(broom)
 library(ggpubr)
-=======
 library(lsr)
 library(effsize)
->>>>>>> 4f462ee06cdf93decdcbedf94461b20fcabf1d85
 attach(df)
 
 
@@ -20,11 +17,7 @@ ViolinIQR <- function(Item,Colnam){
   print(ggplot(df, aes(x=Condition,y=Item,fill=Condition))+
           geom_violin(trim =FALSE)+
           stat_summary(fun = "mean", geom = "crossbar", width = 0.4, colour = "black")+
-<<<<<<< HEAD
           geom_point(position = position_jitter(width = .1, height = .4))+
-=======
-          geom_point(position = position_jitter(width = .07, height = .5))+
->>>>>>> 4f462ee06cdf93decdcbedf94461b20fcabf1d85
           ggtitle(Colnam))
   IQROutliers <- (boxplot.stats(Item)$out)
   BP <- boxplot.stats(Item)
@@ -43,7 +36,7 @@ for (i in 1:length(ColList)){
   colnamnam <- append(colnamnam,t)
 }
 
-#Loop through the columns by pressing "1" to move forward
+#Loop through the columns by pressing <ENTER> to move forward
 Approv <- 1
 for (i in 1:length(ColList)){
   ColumnVec <- df[,ColList[i]]
@@ -55,7 +48,6 @@ for (i in 1:length(ColList)){
   } 
 }
 
-<<<<<<< HEAD
 #Loop through all the relevant columns to check for outliers
 
 vector.is.empty <- function(x) return(length(x) ==0 )
@@ -83,7 +75,6 @@ plot(Expectation ~ 1 + Appropriate)
 
 cor(Expectation, Appropriate)
 
-=======
 ## t-tests
 #Function that runs t-test, shows boxplot and prints effect size for all variables 
 #grouped by condition
@@ -125,6 +116,7 @@ library(car)
 library(quantmod)
 library(MASS)
 library(corrplot)
+library(lm.beta)
 
 RelCol <- df[,75:83]
 
@@ -143,6 +135,8 @@ for (i in 1:ncol(varvar)){
 lm1 <- lm(PositiveAff ~ Relatedness + Competence)
 
 summary(lm1)
+
+lm.beta(lm1)
 
 # Physical touch as  predictor 
 lm2 <- lm(PositiveAff ~ Roughness + Intensity)
@@ -175,7 +169,6 @@ summary(lm6)
 # Touch context regression analyses ---------------------------------------
 
 lm7 <- lm(PositiveAff ~ Pleasantness + Comfortable)
->>>>>>> 4f462ee06cdf93decdcbedf94461b20fcabf1d85
 
 summary(lm7)
 
