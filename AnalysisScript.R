@@ -54,9 +54,9 @@ for (i in 1:length(ColList)){
 vector.is.empty <- function(x) return(length(x) ==0 )
 
 for (i in 1:length(ColList)){ # goes from 1 to length of ColList
-  print(IDX <- ColList[i]) # For each "i" the column number is assigned to "IDX"
+  IDX <- ColList[i] # For each "i" the column number is assigned to "IDX"
   BP <- boxplot.stats(df[IDX])
-  print(OutIDX <- which(df[IDX] %in% BP$out))
+  OutIDX <- which(df[IDX] %in% BP$out)
   if (vector.is.empty(OutIDX)==FALSE){
     for (u in 1:length(OutIDX)){
       IDX2 <- OutIDX[u]
