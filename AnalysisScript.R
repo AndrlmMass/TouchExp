@@ -25,15 +25,7 @@ ViolinIQR <- function(Item,Colnam){
   print(ggplot(df, aes(x=Condition,y=Item,fill=Condition))+
           geom_violin(trim =FALSE)+
           stat_summary(fun = "mean", geom = "crossbar", width = 0.4, colour = "black")+
-<<<<<<< HEAD
-
           geom_point(position = position_jitter(width = .1, height = .4))+
-
-          geom_point(position = position_jitter(width = .07, height = .5))+
-
-=======
-          geom_point(position = position_jitter(width = .1, height = .4))+
->>>>>>> f812f10af68fafe5f5d9311f7902752266ddf045
           ggtitle(Colnam))
   IQROutliers <- (boxplot.stats(Item)$out)
   BP <- boxplot.stats(Item)
@@ -64,10 +56,6 @@ for (i in 1:length(ColList)){
   } 
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f812f10af68fafe5f5d9311f7902752266ddf045
 #Loop through all the relevant columns to check for outliers
 
 vector.is.empty <- function(x) return(length(x) ==0 )
@@ -283,7 +271,7 @@ summary(lm6)
 
 lm.beta(lm6)
 
-# Touch context regression analyses ---------------------------------------
+# Touch context regression analyses
 
 lm7 <- lm(PositiveAff ~ Pleasantness + Comfortable)
 
