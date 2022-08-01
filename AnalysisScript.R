@@ -25,11 +25,15 @@ ViolinIQR <- function(Item,Colnam){
   print(ggplot(df, aes(x=Condition,y=Item,fill=Condition))+
           geom_violin(trim =FALSE)+
           stat_summary(fun = "mean", geom = "crossbar", width = 0.4, colour = "black")+
+<<<<<<< HEAD
 
           geom_point(position = position_jitter(width = .1, height = .4))+
 
           geom_point(position = position_jitter(width = .07, height = .5))+
 
+=======
+          geom_point(position = position_jitter(width = .1, height = .4))+
+>>>>>>> f812f10af68fafe5f5d9311f7902752266ddf045
           ggtitle(Colnam))
   IQROutliers <- (boxplot.stats(Item)$out)
   BP <- boxplot.stats(Item)
@@ -48,7 +52,7 @@ for (i in 1:length(ColList)){
   colnamnam <- append(colnamnam,t)
 }
 
-#Loop through the columns by pressing "1" to move forward
+#Loop through the columns by pressing <ENTER> to move forward
 Approv <- 1
 for (i in 1:length(ColList)){
   ColumnVec <- df[,ColList[i]]
@@ -60,15 +64,18 @@ for (i in 1:length(ColList)){
   } 
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> f812f10af68fafe5f5d9311f7902752266ddf045
 #Loop through all the relevant columns to check for outliers
 
 vector.is.empty <- function(x) return(length(x) ==0 )
 
 for (i in 1:length(ColList)){ # goes from 1 to length of ColList
-  print(IDX <- ColList[i]) # For each "i" the column number is assigned to "IDX"
+  IDX <- ColList[i] # For each "i" the column number is assigned to "IDX"
   BP <- boxplot.stats(df[IDX])
-  print(OutIDX <- which(df[IDX] %in% BP$out))
+  OutIDX <- which(df[IDX] %in% BP$out)
   if (vector.is.empty(OutIDX)==FALSE){
     for (u in 1:length(OutIDX)){
       IDX2 <- OutIDX[u]
@@ -111,13 +118,14 @@ DatTestBeast <- function(Var, nam){
 
 Approv2 <- 1
 for (i in 1:length(ColList2)){
-  ColumnVec2 <- df[,ColList2[i]]
-  ColumnName2 <- colnamnam2[i]
-  DatTestBeast(ColumnVec2,ColumnName2)
   Approv2 <- readline(prompt = "Press <enter> to see the next plot.")
   if (Approv2 != ""){
     break
-  } 
+  } else {
+    ColumnVec2 <- df[,ColList2[i]]
+    ColumnName2 <- colnamnam2[i]
+    DatTestBeast(ColumnVec2,ColumnName2)
+  }
 }
 
 # Do needs differ between the conditions?
@@ -185,10 +193,12 @@ library(car)
 library(quantmod)
 library(MASS)
 library(corrplot)
+library(lm.beta)
+library(faraway)
 
 RelCol <- df[,75:83]
-
 varvar <- cor(RelCol, method = "pearson")
+vif(RelCol)
 
 for (i in 1:ncol(varvar)){
   print(mean(varvar[,i]))
@@ -200,14 +210,18 @@ for (i in 1:ncol(varvar)){
 # POSITIVE AFFECT - ADD THE "FULL MODEL" VERSION TOO
 
 # Needs predicting positive affect
-lm1 <- lm(PositiveAff ~ Relatedness + Competence)
+lm1 <- lm(CompositeAff ~ Relatedness + Competence)
 
 summary(lm1)
 
+lm.beta(lm1)
+
 # Physical touch as  predictor 
-lm2 <- lm(PositiveAff ~ Roughness + Intensity)
+lm2 <- lm(PositiveAff ~ Humidity + Velocity + Roughness + Intensity)
 
 summary(lm2)
+
+lm.beta(lm2)
 
 # NEGATIVE AFFECT
 
@@ -216,21 +230,58 @@ lm3 <- lm(NegativeAff ~ Relatedness + Competence)
 
 summary(lm3)
 
+lm.beta(lm3)
+
 lm4 <- lm(NegativeAff ~ Relatedness + Competence + SelfActualization + 
             Security + SelfEsteem + PleasureStimulation + PhysicalThriving + 
             Autonomy + Popularity)
 
 summary(lm4)
 
+lm.beta(lm4)
+
 # Physical touch  as predictor
 lm5 <- lm(NegativeAff ~ Roughness + Intensity)
 
 summary(lm5)
 
+lm.beta(lm5)
+
 lm6 <- lm(NegativeAff ~ Roughness + Intensity + Humidity + Velocity)
 
 summary(lm6)
 
+lm.beta(lm6)
+
+# COMPOSITE AFFECT
+
+# Need as predictor
+lm3 <- lm(CompositeAff ~ Relatedness + Competence)
+
+summary(lm3)
+
+lm.beta(lm3)
+
+lm4 <- lm(CompositeAff ~ Relatedness + Competence + SelfActualization + 
+            Security + SelfEsteem + PleasureStimulation + PhysicalThriving + 
+            Autonomy + Popularity)
+
+summary(lm4)
+
+lm.beta(lm4)
+
+# Physical touch  as predictor
+lm5 <- lm(CompositeAff ~ Roughness + Intensity)
+
+summary(lm5)
+
+lm.beta(lm5)
+
+lm6 <- lm(CompositeAff ~ Roughness + Intensity + Humidity + Velocity)
+
+summary(lm6)
+
+lm.beta(lm6)
 
 # Touch context regression analyses ---------------------------------------
 
