@@ -1,16 +1,21 @@
-df <- read.csv("ConvertedTouchScores.csv")
+df <- read.csv("ConvertedTouchScores5.csv")
+path <- getwd()
 
+NuCond1 <- rep(c("Positive"),each=150)
+df[1:150,76] <- NuCond1
+NuCond2 <- rep(c("Negative"),each=150)
+df[151:300,76] <- NuCond2
+
+path <- getwd()
 library(lme4)
 library(nlme)
 library(ggplot2)
-<<<<<<< HEAD
 library(dplyr)
 library(broom)
 library(ggpubr)
-=======
 library(lsr)
 library(effsize)
->>>>>>> 4f462ee06cdf93decdcbedf94461b20fcabf1d85
+library(ggsignif)
 attach(df)
 
 
@@ -20,11 +25,11 @@ ViolinIQR <- function(Item,Colnam){
   print(ggplot(df, aes(x=Condition,y=Item,fill=Condition))+
           geom_violin(trim =FALSE)+
           stat_summary(fun = "mean", geom = "crossbar", width = 0.4, colour = "black")+
-<<<<<<< HEAD
+
           geom_point(position = position_jitter(width = .1, height = .4))+
-=======
+
           geom_point(position = position_jitter(width = .07, height = .5))+
->>>>>>> 4f462ee06cdf93decdcbedf94461b20fcabf1d85
+
           ggtitle(Colnam))
   IQROutliers <- (boxplot.stats(Item)$out)
   BP <- boxplot.stats(Item)
@@ -55,7 +60,7 @@ for (i in 1:length(ColList)){
   } 
 }
 
-<<<<<<< HEAD
+
 #Loop through all the relevant columns to check for outliers
 
 vector.is.empty <- function(x) return(length(x) ==0 )
@@ -83,7 +88,6 @@ plot(Expectation ~ 1 + Appropriate)
 
 cor(Expectation, Appropriate)
 
-=======
 ## t-tests
 #Function that runs t-test, shows boxplot and prints effect size for all variables 
 #grouped by condition
@@ -115,6 +119,62 @@ for (i in 1:length(ColList2)){
     break
   } 
 }
+
+# Do needs differ between the conditions?
+
+#Violinplot w/significance
+ggplot(df,aes(x=Condition, y=PositiveAff, fill = Condition))+
+  geom_violin(alpha=0.5,position="identity",scale = "count",trim=F)+
+  stat_summary(fun = "mean", geom = "crossbar", width = 0.4, colour = "black")+
+  geom_point(size=1.2, position = position_jitter(0.05))+
+  geom_signif(comparisons = list(c("Positive","Negative")),map_signif_level = TRUE, 
+              y_position = 6)+
+  theme(plot.margin = margin(t = 20,r = 10,b = 10, l = 20),
+        axis.title.x = element_text(size=16),axis.text.x = element_text(size=14),
+        axis.title.y = element_text(margin=margin(r=20),size = 16),
+        legend.position = "none",axis.text=element_text(size=10))+
+  scale_y_continuous(breaks=seq(0,6,1))+
+  labs(x = "",y="Positive affect")
+
+
+#Split violin-plots
+ggplot(df,aes(x=0, y=PositiveAff, fill = Condition))+
+  introdataviz::geom_split_violin(alpha=0.5,position="identity",
+                                  scale = "count",trim=F)+coord_flip()+
+  geom_boxplot(width = .05, alpha = .2, fatten = NULL, 
+               show.legend = FALSE,position = position_dodge(.175))+
+  stat_summary(fun = "mean", geom = "pointrange", 
+               position = position_dodge(.175))+
+  theme(plot.margin = margin(t = 20,r = 10,b = 10, l = 10),
+        axis.title.x = element_text(size=16),
+        axis.title.y = element_text(size = 16),legend.position = c(0.8, 0.8), 
+        axis.text=element_text(size=10),legend.title = element_text(size=16))+
+  scale_y_continuous(breaks=seq(0,6,1))+
+  labs(x = "Density",y="Positive affect")+
+  scale_fill_discrete(name = "Touch experience", 
+                      labels = c("Negative","Positive"))
+
+
+#Cowplot 
+ggplot(df, aes(x=PositiveAff,fill = Condition))+
+  geom_density(alpha=0.8,bw = "nrd")+
+  theme(plot.margin = margin(t = 20,r = 10,b = 10, l = 10), 
+        axis.title.x = element_text(size=16),
+        axis.title.y = element_text(size = 16),legend.position = c(0.8, 0.8), 
+        axis.text=element_text(size=10),legend.title = element_text(size=16))+
+  scale_fill_discrete(name = "Touch experience")+
+  labs(y="Density")
+
+
+  
+
+ggsave(filename = "GrandNeedMean by Cond.tif",path = path, width = 5, height = 4, device='tiff', dpi=300)
+
+
+group = as.factor(rep(c(1,2), each=200))
+
+
+
 
 ## Does Needs predict affect better than Touch?
 # SHOULD CONSIDER VIF - NOT SURE WHY YET
@@ -175,7 +235,6 @@ summary(lm6)
 # Touch context regression analyses ---------------------------------------
 
 lm7 <- lm(PositiveAff ~ Pleasantness + Comfortable)
->>>>>>> 4f462ee06cdf93decdcbedf94461b20fcabf1d85
 
 summary(lm7)
 
