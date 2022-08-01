@@ -271,7 +271,7 @@ summary(lm6)
 
 lm.beta(lm6)
 
-# Touch context regression analyses ---------------------------------------
+# Touch context regression analyses
 
 lm7 <- lm(PositiveAff ~ Pleasantness + Comfortable)
 
