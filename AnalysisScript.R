@@ -237,13 +237,13 @@ for (i in 1:ncol(varvar)){
 # POSITIVE AFFECT - ADD THE "FULL MODEL" VERSION TOO
 Condition = as.factor(Condition)
 
-ggplot(df, aes(x=GrandNeedMean,y=CompositeAff))+
-  stat_poly_eq(aes(label = paste(after_stat(rr.label))), size = 6)+
-  geom_point(size = 3, position = position_jitter(0.05), aes(colour = Condition))+
+ggplot(df, aes(x=GrandNeedMean,y=CompositeAff, colour = Condition))+
+  stat_poly_eq(aes(label = paste(after_stat(eq.label))), size = 6)+
+  stat_poly_line()+
+  geom_point(size = 3, position = position_jitter(0.05), aes(colour = Condition))
+
+
   geom_smooth(formula = y ~ x, method="lm", aes(colour = Condition, group = Condition), size = 3)+
-  geom_smooth(formula =  y ~ x, method = 'lm',size = 4, colour = 'black', se = F)
-
-
 geom_smooth(formula =  y ~ x, method = 'lm',size = 2, colour = 'black', se = F)+
 geom_smooth(formula = y ~ x, method="lm", aes(colour = Condition, group = Condition))+
 aes(colour = Condition, shape = Condition), 
