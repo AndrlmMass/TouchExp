@@ -16,6 +16,7 @@ library(ggpubr)
 library(lsr)
 library(effsize)
 library(ggsignif)
+library("gridExtra")
 attach(df)
 
 
@@ -136,6 +137,7 @@ ggplot(df,aes(x=Condition, y=PositiveAff, fill = Condition))+
 
 # Same as above, but showing all nine needs in a 3x3 array
 
+#Function to plot violins, just insert variable and its string into the function as below. 
 VioComp <- function(viovar, varnam3){
   return(ggplot(df,aes(x=Condition, y=viovar, fill = Condition))+
     geom_violin(alpha=0.5,position="identity",scale = "count",trim=F)+
@@ -162,15 +164,12 @@ SeAc <- VioComp(SelfActualization,"Self-actualization")
 Sec <- VioComp(Security,"Security")
 Phy <- VioComp(PhysicalThriving,"Physical thriving")
 Plea <- VioComp(PleasureStimulation,"PleasureStimulation")
+PA <- VioComp(PositiveAff,"Positive affect")
+NAf <- VioComp(NegativeAff,"Negative affect")
+CoAf <- VioComp(CompositeAff,"Composite affect")
 
-grid.arrange(GNM2, Rel, Aut, Pop, Comp, SeEs, SeAc, Sec, Phy, Plea, nrow = 3)
-
-
-
-
-
-
-
+grid.arrange(GNM2, Rel, Aut, Pop, Comp, SeEs, SeAc, Sec, Phy, Plea, ncol = 5, nrow = 2)
+grid.arrange(PA,NAf,CoAf, nrow = 1)
 
 #Split violin-plots
 ggplot(df,aes(x=0, y=PositiveAff, fill = Condition))+
@@ -222,6 +221,7 @@ library(MASS)
 library(corrplot)
 library(lm.beta)
 library(faraway)
+library(ggpmisc)
 
 RelCol <- df[,75:83]
 varvar <- cor(RelCol, method = "pearson")
@@ -235,6 +235,18 @@ for (i in 1:ncol(varvar)){
 
 #Region
 # POSITIVE AFFECT - ADD THE "FULL MODEL" VERSION TOO
+Condition = as.factor(Condition)
+
+ggplot(df, aes(x=GrandNeedMean,y=CompositeAff))+
+  stat_poly_eq(aes(label = paste(after_stat(rr.label))), size = 6)+
+  geom_point(size = 3, position = position_jitter(0.05), aes(colour = Condition))+
+  geom_smooth(formula = y ~ x, method="lm", aes(colour = Condition, group = Condition), size = 3)+
+  geom_smooth(formula =  y ~ x, method = 'lm',size = 4, colour = 'black', se = F)
+
+
+geom_smooth(formula =  y ~ x, method = 'lm',size = 2, colour = 'black', se = F)+
+geom_smooth(formula = y ~ x, method="lm", aes(colour = Condition, group = Condition))+
+aes(colour = Condition, shape = Condition), 
 
 # Needs predicting positive affect
 lm1 <- lm(CompositeAff ~ Relatedness + Competence)
