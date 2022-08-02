@@ -122,15 +122,54 @@ for (i in 1:length(ColList2)){
 ggplot(df,aes(x=Condition, y=PositiveAff, fill = Condition))+
   geom_violin(alpha=0.5,position="identity",scale = "count",trim=F)+
   stat_summary(fun = "mean", geom = "crossbar", width = 0.4, colour = "black")+
-  geom_point(size=1.2, position = position_jitter(0.05))+
+  geom_point(size=1.2, position = position_jitter(0.05))+coord_flip()+
   geom_signif(comparisons = list(c("Positive","Negative")),map_signif_level = TRUE, 
               y_position = 6)+
-  theme(plot.margin = margin(t = 20,r = 10,b = 10, l = 20),
+  theme(plot.margin = margin(t = 20,r = 20,b = 25, l = 12),
         axis.title.x = element_text(size=16),axis.text.x = element_text(size=14),
         axis.title.y = element_text(margin=margin(r=20),size = 16),
-        legend.position = "none",axis.text=element_text(size=10))+
+        legend.position = "none",axis.text=element_text(size=10),
+        axis.text.y = element_text(size=14))+
   scale_y_continuous(breaks=seq(0,6,1))+
   labs(x = "",y="Positive affect")
+
+
+# Same as above, but showing all nine needs in a 3x3 array
+
+VioComp <- function(viovar, varnam3){
+  return(ggplot(df,aes(x=Condition, y=viovar, fill = Condition))+
+    geom_violin(alpha=0.5,position="identity",scale = "count",trim=F)+
+    stat_summary(fun = "mean", geom = "crossbar", width = 0.4, colour = "black")+
+    geom_point(size=1.2, position = position_jitter(0.05))+coord_flip()+
+    geom_signif(comparisons = list(c("Positive","Negative")),map_signif_level = TRUE, 
+                y_position = 6)+
+    theme(plot.margin = margin(t = 20,r = 20,b = 25, l = 0.3),
+          axis.title.x = element_text(size=16),axis.text.x = element_text(size=14),
+          axis.title.y = element_text(margin=margin(r=20),size = 16),
+          legend.position = "none",axis.text=element_text(size=10),
+          axis.text.y = element_text(size=14))+
+    scale_y_continuous(breaks=seq(0,6,1))+
+    labs(x = "",y=varnam3))
+}
+
+GNM2 <- VioComp(GrandNeedMean,"GrandNeedMean")
+Rel <- VioComp(Relatedness,"Relatedness")
+Aut <- VioComp(Autonomy,"Autonomy")
+Pop <- VioComp(Popularity,"Popularity")
+Comp <- VioComp(Competence,"Competence")
+SeEs <- VioComp(SelfEsteem,"Self-esteem")
+SeAc <- VioComp(SelfActualization,"Self-actualization")
+Sec <- VioComp(Security,"Security")
+Phy <- VioComp(PhysicalThriving,"Physical thriving")
+Plea <- VioComp(PleasureStimulation,"PleasureStimulation")
+
+grid.arrange(GNM2, Rel, Aut, Pop, Comp, SeEs, SeAc, Sec, Phy, Plea, nrow = 3)
+
+
+
+
+
+
 
 
 #Split violin-plots
