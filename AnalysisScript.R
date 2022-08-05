@@ -6,7 +6,6 @@ df[1:150,76] <- NuCond1
 NuCond2 <- rep(c("Negative"),each=150)
 df[151:300,76] <- NuCond2
 
-path <- getwd()
 library(lme4)
 library(nlme)
 library(ggplot2)
@@ -133,6 +132,100 @@ ggplot(df,aes(x=Condition, y=PositiveAff, fill = Condition))+
         axis.text.y = element_text(size=14))+
   scale_y_continuous(breaks=seq(0,6,1))+
   labs(x = "",y="Positive affect")
+
+
+#In order to create categories for each column, we change the data frame from wide
+#to long format. To do this, we use the reshape() function in our new data frame.
+
+nudat <- subset(df,select = c(1,76,78:86))
+library(ggthemes)
+library(viridis)
+attach(nudat)
+
+data_ggp <- data.frame(y = c(nudat$Popularity, nudat$SelfEsteem,nudat$Security,
+                             nudat$PleasureStimulation,nudat$PhysicalThriving,
+                             nudat$SelfActualization,nudat$Relatedness,
+                             nudat$Competence, nudat$Autonomy),
+                       group = c(rep("Popularity", nrow(nudat)),
+                                 rep("Self-esteem", nrow(nudat)),
+                                 rep("Security", nrow(nudat)),
+                                 rep("Pleasure-stimulation", nrow(nudat)),
+                                 rep("Physical thriving", nrow(nudat)),
+                                 rep("Self-actualization", nrow(nudat)),
+                                 rep("Relatedness", nrow(nudat)),
+                                 rep("Competence", nrow(nudat)),
+                                 rep("Autonomy", nrow(nudat))),
+                       Condi = nudat$Condition)
+data_ggp$group <- factor(data_ggp$group,levels = c("Popularity", "Self-esteem", 
+                                                   "Security", 
+                                                   "Pleasure-stimulation",
+                                                   "Physical thriving", 
+                                                   "Self-actualization",
+                                                   "Relatedness", "Competence",
+                                                   "Autonomy"))
+
+ggplot(data_ggp, aes(group, y, fill = Condi)) +             # Create ggplot2 plot
+  geom_violin(alpha = 0.8, position=position_dodge(),scale = "count",trim=F)+
+  labs(fill="Touch experience:",x = "",y="Need fulfilment")+
+  theme(plot.margin = margin(t = 35,r = 30,b = 15, l = 0),
+        axis.title.x = element_text(size=16),
+        axis.text.x = element_text(size=14),
+        axis.title.y = element_text(margin=margin(r=20),size = 16),
+        axis.text=element_text(size=10), 
+        legend.position = c(0, 1), 
+        legend.justification = c(0.4, 0),
+        legend.direction = "horizontal",
+        axis.text.y = element_text(size=16))+
+  scale_y_continuous(breaks=seq(1,5,1))+
+  scale_fill_colorblind()+
+  coord_flip()
+
+#Split ggplot with all nine items. 
+
+ggplot(data_ggp, aes(group, y, fill = Condi)) +             # Create ggplot2 plot
+  geom_violin(alpha = 0.8, position=position_dodge(),scale = "count",trim=F)+
+  labs(fill="Touch experience:",x = "",y="Need fulfilment")+
+  theme(plot.margin = margin(t = 35,r = 30,b = 15, l = 0),
+        axis.title.x = element_text(size=16),
+        axis.text.x = element_text(size=14),
+        axis.title.y = element_text(margin=margin(r=20),size = 16),
+        axis.text=element_text(size=10), 
+        legend.position = c(0, 1), 
+        legend.justification = c(0.4, 0),
+        legend.direction = "horizontal",
+        axis.text.y = element_text(size=16))+
+  scale_y_continuous(breaks=seq(1,5,1))+
+  scale_fill_colorblind()+
+  coord_flip()
+
+ggplot(data_ggp,aes(group, y, fill = Condi))+
+  scale_fill_colorblind()+
+  introdataviz::geom_split_violin(width = 1.3, alpha=0.5,position="identity",
+                                  scale = "count",trim=F)+
+  coord_flip()+
+  #geom_boxplot(width = .1, alpha = 0.3, fatten = F, 
+  #             show.legend = FALSE,position = position_dodge(.4),
+  #             outlier.shape = NA)+
+  #stat_summary(fun = "mean", geom = "pointrange", 
+  #             position = position_dodge(.4), size = 0.1)+
+  #geom_point(position = position_jitter(0.2))+
+  labs(fill="Touch experience:",x = "",y="Need fulfilment")+
+  theme(plot.margin = margin(t = 40,r = 30,b = 15, l = 0),
+        axis.title.x = element_text(size=16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x = element_text(size=14),
+        axis.text.y = element_text(size=16),
+        legend.text = element_text(size=11.8),
+        legend.position = c(0, 1), 
+        legend.justification = c(0.02, 0),
+        legend.direction = "horizontal", 
+        legend.title = element_text(size=15.8))+
+  scale_y_continuous(breaks=seq(1,5,1))
+  
+#labs(x = "Density",y="Positive affect")+
+#scale_fill_discrete(name = "Touch experience", 
+#                    labels = c("Negative","Positive"))
+  
 
 
 # Same as above, but showing all nine needs in a 3x3 array

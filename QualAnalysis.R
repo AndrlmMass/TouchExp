@@ -25,14 +25,14 @@ for (i in 151:300){
 ggplot(df3,aes(LocLabl, fill = Condition))+
   geom_bar(position = position_dodge())+
   labs(y = "Count", x = "")+
-  scale_y_continuous(breaks=seq(0,100,10))+
+  scale_y_continuous(breaks=seq(0,100,10),expand = c(0.01, 0))+
   theme(axis.text.x = element_text(size=12,angle = 60,hjust = 1),
         axis.title.y = element_text(size = 16),axis.text.y = element_text(size=12),
         legend.position = c(0.8, 0.8), axis.text=element_text(size=10),
         legend.title = element_text(size=16),legend.text = element_text(size=12))+
   scale_fill_discrete(name = "Touch experience", labels = c("Positive", "Negative"))
 
-ggsave(filename = "LocBothGroups.tif",path = path, width = 8, height = 8, 
+ggsave(filename = "LocBothGroups.tif",path = path1, width = 8, height = 8, 
        device='tiff', dpi=300)
 
 #Plot IntLabl for each condition, not combined
