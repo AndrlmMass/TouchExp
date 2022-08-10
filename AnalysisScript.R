@@ -182,32 +182,16 @@ ggplot(data_ggp, aes(group, y, fill = Condi)) +             # Create ggplot2 plo
 
 #Split ggplot with all nine items. 
 
-ggplot(data_ggp, aes(group, y, fill = Condi)) +             # Create ggplot2 plot
-  geom_violin(alpha = 0.8, position=position_dodge(),scale = "count",trim=F)+
-  labs(fill="Touch experience:",x = "",y="Need fulfilment")+
-  theme(plot.margin = margin(t = 35,r = 30,b = 15, l = 0),
-        axis.title.x = element_text(size=16),
-        axis.text.x = element_text(size=14),
-        axis.title.y = element_text(margin=margin(r=20),size = 16),
-        axis.text=element_text(size=10), 
-        legend.position = c(0, 1), 
-        legend.justification = c(0.4, 0),
-        legend.direction = "horizontal",
-        axis.text.y = element_text(size=16))+
-  scale_y_continuous(breaks=seq(1,5,1))+
-  scale_fill_colorblind()+
-  coord_flip()
-
 ggplot(data_ggp,aes(group, y, fill = Condi))+
   scale_fill_colorblind()+
   introdataviz::geom_split_violin(width = 1.3, alpha=0.5,position="identity",
-                                  scale = "count",trim=F)+
+                                  scale = "count",trim=F, adjust = .5)+
   coord_flip()+
-  #geom_boxplot(width = .1, alpha = 0.3, fatten = F, 
-  #             show.legend = FALSE,position = position_dodge(.4),
-  #             outlier.shape = NA)+
-  #stat_summary(fun = "mean", geom = "pointrange", 
-  #             position = position_dodge(.4), size = 0.1)+
+  geom_boxplot(width = .15, alpha = 0.3, fatten = NULL, 
+               show.legend = FALSE,position = position_dodge(.4),
+               outlier.shape = NA)+
+  stat_summary(fun = "mean", 
+               position = position_dodge(.4), size = 0.1)+
   #geom_point(position = position_jitter(0.2))+
   labs(fill="Touch experience:",x = "",y="Need fulfilment")+
   theme(plot.margin = margin(t = 40,r = 30,b = 15, l = 0),
@@ -217,10 +201,12 @@ ggplot(data_ggp,aes(group, y, fill = Condi))+
         axis.text.y = element_text(size=16),
         legend.text = element_text(size=11.8),
         legend.position = c(0, 1), 
-        legend.justification = c(0.02, 0),
+        legend.justification = c(0.03, 0),
         legend.direction = "horizontal", 
         legend.title = element_text(size=15.8))+
   scale_y_continuous(breaks=seq(1,5,1))
+
+ggsave(filename = "GrandNeedMean by Cond2.tif",path = path, width = 7, height = 7, device='tiff', dpi=300)
   
 #labs(x = "Density",y="Positive affect")+
 #scale_fill_discrete(name = "Touch experience", 
