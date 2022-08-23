@@ -1,24 +1,46 @@
 setwd("~/Projects/TouchExp/MainStudy/Rscript2/TouchExp")
+path1 <- getwd()
 
 df3 <- read.csv("ConvertedTouchScores5.csv")
+
+NuCond1 <- rep(c("Positive"),each=150)
+df3[1:150,76] <- NuCond1
+NuCond2 <- rep(c("Negative"),each=150)
+df3[151:300,76] <- NuCond2
 
 library(tibble)
 library(dplyr)
 library(ggplot2)
+library(forcats)
+library(ggthemes)
 attach(df3)
+
+for (u in 1:nrow(df3)){
+  if (df3[u,23] == "RestaurantBar"){
+    df3[u,23] <- "Restaurant/Bar"
+  } 
+}
 
 #Plot LocLabl by condition
 
+df3 %>%
+  arrange(df3,..., by_group = TRUE) %>%
+  mutate(name=factor(name, levels=name)) %>%
+
+
+
+
+
 ggplot(df3,aes(LocLabl, fill = Condition))+
   geom_bar(position = position_dodge())+
-  labs(y = "Count", x = "")+
-  scale_y_continuous(breaks=seq(0,100,10),expand = c(0.02, 0))+
-  theme(axis.text.x = element_text(angle = 45,hjust = 1, size = 12),
-        axis.title.y = element_text(size = 16),
-        legend.position = c(0.8, 0.8), axis.text=element_text(size=10),
-        legend.title = element_text(size=16),legend.text = element_text(size=12),
+  labs(fill = "Touch experience", y = "Count", x = "")+
+  scale_y_continuous(breaks=seq(0,100,10),expand = c(0.02, 0), limits=c(0,100))+
+  theme(axis.text.x = element_text(angle = 45,hjust = 1, size = 14),
+        axis.title.y = element_text(size = 18),
+        legend.position = c(0.8, 0.8), axis.text.y=element_text(size=14),
+        legend.title = element_text(size=18),legend.text = element_text(size=16),
         plot.margin = margin(t = 20,r = 20,b = 15,l = 15))+
-  scale_fill_discrete(name = "Touch experience", labels = c("Positive", "Negative"))
+  scale_fill_colorblind()
 
 #Plot IntLabl for each condition, not combined
 
