@@ -23,11 +23,26 @@ for (u in 1:nrow(df3)){
 
 #Plot LocLabl by condition
 
-df3 %>%
-  arrange(df3,..., by_group = TRUE) %>%
-  mutate(name=factor(name, levels=name)) %>%
+# apply the summation per value 
 
+library ('plyr')
 
+LocNam <- c("Work","Restaurant/Bar","Other's home","Public Building", "Street",
+            "Vehicle","Other", "Public outside area", "Home")
+LocVal <-
+
+freq <- sapply(df3(1:150,23), 
+               function(x) table(factor(x, levels = LocNam, 
+                                        ordered = TRUE)))
+print ("Count of variables per column")
+print (freq)
+
+cnames <- c("col1","col2","col3")
+NuMatrix <- matrix(
+
+for (t = 1:nrow(df3)){
+  
+}
 
 
 
@@ -40,7 +55,8 @@ ggplot(df3,aes(LocLabl, fill = Condition))+
         legend.position = c(0.8, 0.8), axis.text.y=element_text(size=14),
         legend.title = element_text(size=18),legend.text = element_text(size=16),
         plot.margin = margin(t = 20,r = 20,b = 15,l = 15))+
-  scale_fill_colorblind()
+  scale_fill_colorblind()+
+  geom_text(stat='count', aes(label=..count..), position = position_dodge(width = 0.2))
 
 #Plot IntLabl for each condition, not combined
 
