@@ -13,6 +13,7 @@ library(dplyr)
 library(ggplot2)
 library(forcats)
 library(ggthemes)
+library(reshape)
 attach(df3)
 
 for (u in 1:nrow(df3)){
@@ -25,38 +26,34 @@ for (u in 1:nrow(df3)){
 
 # apply the summation per value 
 
-library ('plyr')
+LocNam <- c("Work", "Work","Restaurant/Bar","Restaurant/Bar","Other's home", 
+            "Other's home", "Public Building", "Public Building", "Street",
+            "Street","Vehicle","Vehicle", "Other", "Other",
+            "Public outside area", "Public outside area","Home","Home")
+LocVal <- c(8,52,9,35,7,10,7,10,6,10,2,4,2,2,12,5,97,32)
+LocCond <- c('Positive','Negative','Positive','Negative','Positive','Negative',
+             'Positive','Negative','Positive','Negative','Positive','Negative',
+             'Positive','Negative','Positive','Negative','Positive','Negative')
+LocDf <- data.frame(LocNam,LocVal,LocCond)
 
-LocNam <- c("Work","Restaurant/Bar","Other's home","Public Building", "Street",
-            "Vehicle","Other", "Public outside area", "Home")
-LocVal <-
+LocDf$LocNam <- factor(LocDf$LocNam,levels = c("Work","Restaurant/Bar",
+                                               "Other's home","Public Building", 
+                                               "Street","Vehicle", "Other", 
+                                               "Public outside area", "Home"))
 
-freq <- sapply(df3(1:150,23), 
-               function(x) table(factor(x, levels = LocNam, 
-                                        ordered = TRUE)))
-print ("Count of variables per column")
-print (freq)
-
-cnames <- c("col1","col2","col3")
-NuMatrix <- matrix(
-
-for (t = 1:nrow(df3)){
-  
-}
-
-
-
-ggplot(df3,aes(LocLabl, fill = Condition))+
-  geom_bar(position = position_dodge())+
+ggplot(LocDf,aes(x=LocNam, y=LocVal, fill = LocCond))+
+  geom_bar(stat = "identity",position = position_dodge())+
   labs(fill = "Touch experience", y = "Count", x = "")+
   scale_y_continuous(breaks=seq(0,100,10),expand = c(0.02, 0), limits=c(0,100))+
   theme(axis.text.x = element_text(angle = 45,hjust = 1, size = 14),
         axis.title.y = element_text(size = 18),
-        legend.position = c(0.8, 0.8), axis.text.y=element_text(size=14),
+        legend.position = c(0.4, 0.8), axis.text.y=element_text(size=14),
         legend.title = element_text(size=18),legend.text = element_text(size=16),
         plot.margin = margin(t = 20,r = 20,b = 15,l = 15))+
   scale_fill_colorblind()+
-  geom_text(stat='count', aes(label=..count..), position = position_dodge(width = 0.2))
+  guides(fill = guide_legend(reverse=TRUE))
+
+ggsave(filename = "LocationByCondition3.tif",path = path1, width = 7, height = 7, device='tiff', dpi=300)
 
 #Plot IntLabl for each condition, not combined
 
