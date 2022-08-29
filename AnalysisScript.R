@@ -7,6 +7,7 @@ NuCond2 <- rep(c("Negative"),each=150)
 df[151:300,76] <- NuCond2
 
 library(lme4)
+library(readxl)
 library(nlme)
 library(ggplot2)
 library(dplyr)
@@ -208,9 +209,76 @@ ggplot(data_ggp,aes(group, y, fill = Condi))+
 
 ggsave(filename = "GrandNeedMean by Cond2.tif",path = path, width = 7, height = 7, device='tiff', dpi=300)
   
-#labs(x = "Density",y="Positive affect")+
-#scale_fill_discrete(name = "Touch experience", 
-#                    labels = c("Negative","Positive"))
+# Same as above, but in study 2
+df99 <- read_excel("Study2NeedsValues.xlsx")
+
+
+colnames(df99) <- c("ID","Popularity", "Self-esteem","Security",
+                    "Pleasure-stimulation","Physical thriving", 
+                    "Self-actualization","Relatedness", "Competence",
+                    "Autonomy","Popularity", "Self-esteem","Security",
+                    "Pleasure-stimulation","Physical thriving", 
+                    "Self-actualization","Relatedness", "Competence",
+                    "Autonomy")
+
+
+
+
+data_ggp <- data.frame(y = c(df99$Popularity, df99$SelfEsteem,
+                             df99$Security,df99$Pleasure,
+                             df99$PhysicalThriving, 
+                             df99$SelfActuLisation,
+                             df99$Relatedness,df99$Competence,
+                             df99$Autonomy,
+                             df99$Popularity, df99$SelfEsteem,
+                             df99$Security,df99$Pleasure-stimulation,
+                             df99$PhysicalThriving, 
+                             df99$SelfActuLisation,
+                             df99$Relatedness,df99$Competence,
+                             df99$Autonomy,
+                       group = c(rep("Popularity", nrow(df99)),
+                                 rep("Self-esteem", nrow(df99)),
+                                 rep("Security", nrow(df99)),
+                                 rep("Pleasure-stimulation", nrow(df99)),
+                                 rep("Physical thriving", nrow(df99)),
+                                 rep("Self-actualization", nrow(df99)),
+                                 rep("Relatedness", nrow(df99)),
+                                 rep("Competence", nrow(df99)),
+                                 rep("Autonomy", nrow(df99))),
+                       Condi = nudat$Condition)
+data_ggp$group <- factor(data_ggp$group,levels = c("Popularity", "Self-esteem", 
+                                                   "Security", 
+                                                   "Pleasure-stimulation",
+                                                   "Physical thriving", 
+                                                   "Self-actualization",
+                                                   "Relatedness", "Competence",
+                                                   "Autonomy"))
+
+
+
+ggplot(df99,aes(group, y, fill = Condi))+
+  scale_fill_colorblind()+
+  introdataviz::geom_split_violin(width = 1.3, alpha=0.5,position="identity",
+                                  scale = "count",trim=F, adjust = .5)+
+  coord_flip()+
+  geom_boxplot(width = .15, alpha = 0.3, fatten = NULL, 
+               show.legend = FALSE,position = position_dodge(.4),
+               outlier.shape = NA)+
+  stat_summary(fun = "mean", 
+               position = position_dodge(.4), size = 0.1)+
+  #geom_point(position = position_jitter(0.2))+
+  labs(fill="Touch experience:",x = "",y="Need fulfilment")+
+  theme(plot.margin = margin(t = 40,r = 30,b = 15, l = 0),
+        axis.title.x = element_text(size=16),
+        axis.title.y = element_text(size = 16),
+        axis.text.x = element_text(size=14),
+        axis.text.y = element_text(size=16),
+        legend.text = element_text(size=11.8),
+        legend.position = c(0, 1), 
+        legend.justification = c(0.03, 0),
+        legend.direction = "horizontal", 
+        legend.title = element_text(size=15.8))+
+  scale_y_continuous(breaks=seq(1,5,1))
   
 
 
