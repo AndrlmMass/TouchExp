@@ -17,6 +17,9 @@ library(lsr)
 library(effsize)
 library(ggsignif)
 library("gridExtra")
+library(ggthemes)
+library(viridis)
+library(devtools)
 attach(df)
 
 
@@ -139,9 +142,6 @@ ggplot(df,aes(x=Condition, y=PositiveAff, fill = Condition))+
 #to long format. To do this, we use the reshape() function in our new data frame.
 
 nudat <- subset(df,select = c(1,76,78:86))
-library(ggthemes)
-library(viridis)
-library(devtools)
 attach(nudat)
 
 data_ggp <- data.frame(y = c(nudat$Popularity, nudat$SelfEsteem,nudat$Security,
@@ -165,8 +165,6 @@ data_ggp$group <- factor(data_ggp$group,levels = c("Popularity", "Self-esteem",
                                                    "Self-actualization",
                                                    "Relatedness", "Competence",
                                                    "Autonomy"))
-
-
 
 
 ggplot(data_ggp, aes(group, y, fill = Condi)) +             # Create ggplot2 plot
@@ -211,36 +209,38 @@ ggplot(data_ggp,aes(group, y, fill = Condi))+
         legend.title = element_text(size=15.8))+
   scale_y_continuous(breaks=seq(1,5,1))
 
-ggsave(filename = "GrandNeedMean by Cond2.tif",path = path, width = 7, height = 7, device='tiff', dpi=300)
+ggsave(filename = "GrandNeedMean by Cond2.tif",path = path, width = 7, 
+       height = 7, device='tiff', dpi=300)
   
 # Same as above, but in study 2
 df99 <- read_excel("Study2NeedsValues.xlsx")
 
 
-colnames(df99) <- c("ID","Popularity", "Self-esteem","Security",
-                    "Pleasure-stimulation","Physical thriving", 
-                    "Self-actualization","Relatedness", "Competence",
-                    "Autonomy","Popularity", "Self-esteem","Security",
-                    "Pleasure-stimulation","Physical thriving", 
-                    "Self-actualization","Relatedness", "Competence",
+colnames(df99) <- c("Grouping","Popularity", "SelfEsteem","Security",
+                    "PleasureStimulation","PhysicalThriving", 
+                    "SelfActualization","Relatedness", "Competence",
                     "Autonomy")
+x1 <- 1
+for (g in 51:100){
+  df99[g,2:10] <- df99[x1,11:19]
+  x1 = x1 +1 
+}
+
+df99 <- df99[,-11:-19]
+
+NuCondi <- rep(c("Positive"),each=50)
+df99[1:50,1] <- NuCondi
+NuCondi <- rep(c("Negative"),each=50)
+df99[51:100,1] <- NuCondi
 
 
-
-
-data_ggp <- data.frame(y = c(df99$Popularity, df99$SelfEsteem,
-                             df99$Security,df99$Pleasure,
+data_ggp2 <- data.frame(y = c(df99$Popularity, df99$SelfEsteem,
+                             df99$Security,df99$PleasureStimulation,
                              df99$PhysicalThriving, 
-                             df99$SelfActuLisation,
+                             df99$SelfActualization,
                              df99$Relatedness,df99$Competence,
-                             df99$Autonomy,
-                             df99$Popularity, df99$SelfEsteem,
-                             df99$Security,df99$Pleasure-stimulation,
-                             df99$PhysicalThriving, 
-                             df99$SelfActuLisation,
-                             df99$Relatedness,df99$Competence,
-                             df99$Autonomy,
-                       group = c(rep("Popularity", nrow(df99)),
+                             df99$Autonomy),
+                       group2 = c(rep("Popularity", nrow(df99)),
                                  rep("Self-esteem", nrow(df99)),
                                  rep("Security", nrow(df99)),
                                  rep("Pleasure-stimulation", nrow(df99)),
@@ -249,8 +249,8 @@ data_ggp <- data.frame(y = c(df99$Popularity, df99$SelfEsteem,
                                  rep("Relatedness", nrow(df99)),
                                  rep("Competence", nrow(df99)),
                                  rep("Autonomy", nrow(df99))),
-                       Condi = nudat$Condition)
-data_ggp$group <- factor(data_ggp$group,levels = c("Popularity", "Self-esteem", 
+                       Condi2 = df99$Grouping)
+data_ggp2$group2 <- factor(data_ggp2$group2,levels = c("Popularity", "Self-esteem", 
                                                    "Security", 
                                                    "Pleasure-stimulation",
                                                    "Physical thriving", 
@@ -260,12 +260,12 @@ data_ggp$group <- factor(data_ggp$group,levels = c("Popularity", "Self-esteem",
 
 
 
-ggplot(df99,aes(group, y, fill = Condi))+
+ggplot(data_ggp2,aes(group2, y, fill = Condi2))+
   scale_fill_colorblind()+
-  introdataviz::geom_split_violin(width = 1.3, alpha=0.5,position="identity",
-                                  scale = "count",trim=F, adjust = .5)+
+  introdataviz::geom_split_violin(width = 1.7, alpha=0.5,position="identity",
+                                  scale = "count",trim=F, adjust = 1.2)+
   coord_flip()+
-  geom_boxplot(width = .15, alpha = 0.3, fatten = NULL, 
+  geom_boxplot(width = .15, alpha = 0.3,fatten = NULL, 
                show.legend = FALSE,position = position_dodge(.4),
                outlier.shape = NA)+
   stat_summary(fun = "mean", 
@@ -284,7 +284,8 @@ ggplot(df99,aes(group, y, fill = Condi))+
         legend.title = element_text(size=15.8))+
   scale_y_continuous(breaks=seq(1,5,1))
   
-
+ggsave(filename = "NeedsByCondStudy2.tif",path = path, width = 7, 
+       height = 7, device='tiff', dpi=300)
 
 # Same as above, but showing all nine needs in a 3x3 array
 
