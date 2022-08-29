@@ -141,6 +141,7 @@ ggplot(df,aes(x=Condition, y=PositiveAff, fill = Condition))+
 nudat <- subset(df,select = c(1,76,78:86))
 library(ggthemes)
 library(viridis)
+library(devtools)
 attach(nudat)
 
 data_ggp <- data.frame(y = c(nudat$Popularity, nudat$SelfEsteem,nudat$Security,
@@ -164,6 +165,9 @@ data_ggp$group <- factor(data_ggp$group,levels = c("Popularity", "Self-esteem",
                                                    "Self-actualization",
                                                    "Relatedness", "Competence",
                                                    "Autonomy"))
+
+
+
 
 ggplot(data_ggp, aes(group, y, fill = Condi)) +             # Create ggplot2 plot
   geom_violin(alpha = 0.8, position=position_dodge(),scale = "count",trim=F)+
@@ -301,22 +305,7 @@ VioComp <- function(viovar, varnam3){
     labs(x = "",y=varnam3))
 }
 
-GNM2 <- VioComp(GrandNeedMean,"GrandNeedMean")
-Rel <- VioComp(Relatedness,"Relatedness")
-Aut <- VioComp(Autonomy,"Autonomy")
-Pop <- VioComp(Popularity,"Popularity")
-Comp <- VioComp(Competence,"Competence")
-SeEs <- VioComp(SelfEsteem,"Self-esteem")
-SeAc <- VioComp(SelfActualization,"Self-actualization")
-Sec <- VioComp(Security,"Security")
-Phy <- VioComp(PhysicalThriving,"Physical thriving")
-Plea <- VioComp(PleasureStimulation,"PleasureStimulation")
-PA <- VioComp(PositiveAff,"Positive affect")
-NAf <- VioComp(NegativeAff,"Negative affect")
-CoAf <- VioComp(CompositeAff,"Composite affect")
 
-grid.arrange(GNM2, Rel, Aut, Pop, Comp, SeEs, SeAc, Sec, Phy, Plea, ncol = 5, nrow = 2)
-grid.arrange(PA,NAf,CoAf, nrow = 1)
 
 #Split violin-plots
 ggplot(df,aes(x=0, y=PositiveAff, fill = Condition))+
